@@ -4,6 +4,9 @@ WORKDIR /src
 # Copy everything into the container build context
 COPY . .
 
+# DEBUG: List all files in the container to verify exact paths and casing
+RUN ls -la
+
 # Restore and publish the API project using the solution
 RUN dotnet restore "BatteryMes.sln"
 RUN dotnet publish "BatteryMes.Api/BatteryMes.Api.csproj" -c Release -o /app/publish
