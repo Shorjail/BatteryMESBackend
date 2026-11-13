@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="BatteryMes.Api/BatteryMes.Api.csproj" />
+  <Project Path="BatteryMes.Core/BatteryMes.Core.csproj" />
+  <Project Path="BatteryMes.Infrastructure/BatteryMes.Infrastructure.csproj" />
+</Solution>
