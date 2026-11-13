@@ -7,6 +7,11 @@ builder.Services.AddControllers();
 
 var app = builder.Build();
 
+// Middleware order matters: exception handler wraps everything,
+// request logging sees the final status code.
+app.UseMiddleware<BatteryMes.Api.Middleware.ExceptionHandlingMiddleware>();
+app.UseMiddleware<BatteryMes.Api.Middleware.RequestLoggingMiddleware>();
+
 // Swagger available in all environments (internal API — restrict via network if needed)
 app.UseSwagger();
 app.UseSwaggerUI(c =>
