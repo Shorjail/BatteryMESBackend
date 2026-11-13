@@ -11,6 +11,7 @@ public class MesDbOptions
     public string Database { get; set; } = "BatteryMes";
     public string Username { get; set; } = "postgres";
     public string Password { get; set; } = string.Empty;
+    public string SslMode { get; set; } = "Require";
     public bool AutoInitSchema { get; set; } = true;
 }
 
@@ -26,13 +27,14 @@ public static class SqlSugarConfig
             Database = config["Database:Database"] ?? d.Database,
             Username = config["Database:Username"] ?? d.Username,
             Password = config["Database:Password"] ?? d.Password,
+            SslMode = config["Database:SslMode"] ?? d.SslMode,
             AutoInitSchema = !bool.TryParse(config["Database:AutoInitSchema"], out var a) || a
         };
 
         var connectionString =
         $"Host={opt.Host};Port={opt.Port};Database={opt.Database};" +
         $"Username={opt.Username};Password={opt.Password};" +
-        "Ssl Mode=Require;Include Error Detail=true;Trust Server Certificate=true;";
+        $"Ssl Mode={opt.SslMode};Include Error Detail=true;Trust Server Certificate=true;";
 
         return new SqlSugarClient(new ConnectionConfig
         {

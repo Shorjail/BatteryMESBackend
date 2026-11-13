@@ -8,7 +8,7 @@ COPY . .
 RUN ls -la
 
 # Restore and publish the API project using the solution
-RUN dotnet restore "BatteryMes.sln"
+RUN dotnet restore "BatteryMes.slnx"
 RUN dotnet publish "BatteryMes.Api/BatteryMes.Api.csproj" -c Release -o /app/publish
 
 # Runtime stage for .NET 10
@@ -16,7 +16,7 @@ FROM mcr.microsoft.com/dotnet/aspnet:10.0
 WORKDIR /app
 COPY --from=build /app/publish .
 
-ENV ASPNETCORE_URLS=http://+:10000
+# Render injects PORT at runtime; ASP.NET Core reads it automatically.
 EXPOSE 10000
 
 ENTRYPOINT ["dotnet", "BatteryMes.Api.dll"]
