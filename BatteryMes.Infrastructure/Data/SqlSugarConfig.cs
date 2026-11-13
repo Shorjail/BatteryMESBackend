@@ -30,9 +30,9 @@ public static class SqlSugarConfig
         };
 
         var connectionString =
-            $"Host={opt.Host};Port={opt.Port};Database={opt.Database};" +
-            $"Username={opt.Username};Password={opt.Password};" +
-            "Include Error Detail=true;Trust Server Certificate=true;";
+        $"Host={opt.Host};Port={opt.Port};Database={opt.Database};" +
+        $"Username={opt.Username};Password={opt.Password};" +
+        "Ssl Mode=Require;Include Error Detail=true;Trust Server Certificate=true;";
 
         return new SqlSugarClient(new ConnectionConfig
         {
