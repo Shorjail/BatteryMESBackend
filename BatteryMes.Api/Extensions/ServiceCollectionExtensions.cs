@@ -43,7 +43,8 @@ public static class ServiceCollectionExtensions
 
         // Demo PLC simulator (dev only — see Simulator:* config)
         services.Configure<SimulatorOptions>(config.GetSection("Simulator"));
-        services.AddHostedService<LineSimulator>();
+        services.AddSingleton<LineSimulator>();
+        services.AddHostedService(sp => sp.GetRequiredService<LineSimulator>());
 
         // ---------- API docs ----------
         services.AddEndpointsApiExplorer();

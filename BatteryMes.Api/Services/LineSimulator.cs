@@ -38,15 +38,17 @@ public class LineSimulator(
     private readonly List<(DateTime Due, Func<CancellationToken, Task> Action)> _pending = new();
     private readonly Dictionary<long, string> _unitSerials = new();
     private long _unitKey;
+    private volatile bool _enabled;
+
+    /// <summary>Runtime state — controllable via the simulator admin API.</summary>
+    public bool IsRunning => _enabled;
+    public void SetEnabled(bool value) => _enabled = value;
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        if (!_opt.Enabled)
-        {
-            logger.LogInformation("LineSimulator disabled (Simulator:Enabled=false)");
-            return;
-        }
-        logger.LogInformation("LineSimulator started — spawning unit every ~{Sec}s", _opt.SpawnIntervalSec);
+        _enabled = _opt.Enabled;
+        logger.LogInformation("LineSimulator started — spawning unit every ~{Sec}s (initial: {State})",
+            _opt.SpawnIntervalSec, _enabled ? "running" : "stopped");
 
         // Abandoned units from a previous run would sit InProcess forever and
         // block station occupancy — scrap them on startup.
@@ -67,6 +69,12 @@ public class LineSimulator(
 
         while (!stoppingToken.IsCancellationRequested)
         {
+            if (!_enabled)
+            {
+                await Task.Delay(2000, stoppingToken);
+                continue;
+            }
+
             var now = DateTime.UtcNow;
 
             if (now >= nextSpawn)
