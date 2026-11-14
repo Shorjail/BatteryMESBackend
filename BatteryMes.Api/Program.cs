@@ -4,7 +4,20 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddMesServices(builder.Configuration);
 builder.Services.AddControllers();
-
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.WithOrigins(
+                "http://localhost:5173",
+                "https://batterymes.vercel.app",
+                "https://batterymes.shorjail.com" // <-- Add your new subdomain here
+              )
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
 var app = builder.Build();
 
 // Middleware order matters: exception handler wraps everything,
